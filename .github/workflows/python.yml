@@ -32,4 +32,5 @@ jobs:
       run: |
         gpg --version
         echo "${{ secrets.FIREBASE_JSON }}" > firebase.json.asc
+        ls
         gpg -d --passphrase "${{ secrets.FIREBASE_JSON_PASSPHRASE }}" --batch firebase.json.asc > firebase.json
