@@ -13,7 +13,7 @@ def checkFloat(number):
     try:
         return float(number)
     except ValueError:
-        return 0
+        return None
 
 
 cred = credentials.Certificate("firebase.json")
