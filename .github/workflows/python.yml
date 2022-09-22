@@ -25,3 +25,5 @@ jobs:
     - name: Install dependencies
       run: |
         echo "Hello!!!"
+        python --version
+        pip --version
