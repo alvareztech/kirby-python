@@ -4,7 +4,6 @@ from datetime import date
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-import locale
 
 import datetime
 from firebase_admin.firestore import SERVER_TIMESTAMP
@@ -16,6 +15,13 @@ def checkFloat(number):
     except ValueError:
         return None
 
+
+def spanishMonthToNumber(month):
+    dic = {"enero": 1, "febrero": 2, "marzo": 3, "abril": 4, "mayo": 5, "junio": 6, "julio": 7,
+           "agosto": 8, "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12}
+    return dic[month.lower()]
+
+
 # print(results.prettify())
 
 
@@ -23,8 +29,6 @@ BO_BCB_URL = "https://www.bcb.gob.bo/librerias/indicadores/otras/ultimo.php"
 
 
 def main():
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
-
     cred = credentials.Certificate("firebase.json")
     firebase_admin.initialize_app(cred)
 
@@ -36,10 +40,12 @@ def main():
     soup = BeautifulSoup(page.content, "html.parser")
 
     priceDateRaw = soup.select_one(
-        "table").select_one("td").select_one("strong")
-    print(priceDateRaw.string)
-    priceDate = datetime.datetime.strptime(
-        priceDateRaw.string, "%d de %B %Y").date()
+        "table").select_one("td").select_one("strong").string
+    print(priceDateRaw)
+    priceDateRaw = priceDateRaw.split()
+    priceDateRaw.remove("de")
+    priceDate = datetime.datetime(int(priceDateRaw[2]), spanishMonthToNumber(
+        priceDateRaw[1]), int(priceDateRaw[0]))
     priceDate = priceDate.strftime("%d-%m-%Y")
     print(priceDate)
 
