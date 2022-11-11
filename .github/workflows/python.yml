@@ -35,6 +35,11 @@ jobs:
         # ls
         # echo "$(<firebase.json.asc)"
         gpg -d --passphrase "${{ secrets.FIREBASE_JSON_PASSPHRASE }}" --batch firebase.json.asc > firebase.json
+    - name: Pre locate settings
+      run: |
+        export LC_ALL="en_US.UTF-8"
+        export LC_CTYPE="en_US.UTF-8"
+        sudo dpkg-reconfigure locales
     - name: Run script
       run: |
         python main.py
